@@ -29,5 +29,5 @@ setup(
         'pygame',
         'numpy'
     ],
-    entry_points={"console_scripts": ["ansidote = ansidote:run_ansicht"]}
+    entry_points={"console_scripts": ["ansidote = ansidote:run_ansidote"]}
 )

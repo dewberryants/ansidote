@@ -1,6 +1,6 @@
 """
 ansi.e -  A simple ANSI art editor.
-Copyright (C) 2024 Dominik Behrens
+Copyright (C) 2025 Dominik Behrens
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,11 +19,68 @@ import os.path
 import sys
 import pygame
 
+from PyQt6.QtCore import QSettings
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QVBoxLayout, QSizePolicy, QMenuBar
+from PyQt6.QtGui import QPixmap
+
 from ansidote.image import Image, load_image_from_file
 from ansidote.ui import CharacterMap, open_settings_dialog, HistoryPalette
 from tkinter import Tk, filedialog, colorchooser
 
 from ansidote.resources import icon_open, icon_save, icon_settings
+
+
+class AnsiDotE:
+    def __init__(self):
+        self.app = QApplication(sys.argv)
+        self.q_settings = QSettings("ansidote", "app")
+        self.main_window = AnsiDotEMainWindow(self)
+        self.image_editor = ImageEditingWidget()
+
+    def setup_main_menu(self):
+        menu = QMenuBar()
+        file_menu = menu.addMenu("File")
+        exit_action = file_menu.addAction("Quit")
+        exit_action.triggered.connect(self.app.quit)
+        self.main_window.setMenuBar(menu)
+
+    def setup_main_ui(self):
+        self.main_window.setWindowTitle("ANSI.e")
+        self.main_window.setCentralWidget(self.image_editor)
+
+    def run(self):
+        self.setup_main_ui()
+        self.setup_main_menu()
+
+        self.main_window.show()
+        self.app.exec()
+
+
+class AnsiDotEMainWindow(QMainWindow):
+    def __init__(self, app):
+        super().__init__()
+        self.app = app
+        if self.app.q_settings.value("geometry"):
+            self.restoreGeometry(self.app.q_settings.value("geometry"))
+        if self.app.q_settings.value("state"):
+            self.restoreState(self.app.q_settings.value("state"))
+
+    def closeEvent(self, a0):
+        self.app.q_settings.setValue("geometry", self.saveGeometry())
+        self.app.q_settings.setValue("state", self.saveState())
+
+
+class ImageEditingWidget(QWidget):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.canvas = QPixmap(400, 400)
+
+        layout = QVBoxLayout()
+        label = QLabel()
+        label.setSizePolicy(QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding))
+        label.setPixmap(self.canvas)
+        layout.addWidget(label)
+        self.setLayout(layout)
 
 
 class Editor:

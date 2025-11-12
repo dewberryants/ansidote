@@ -1,2 +1,2 @@
-pygame
+PyQT6
 numpy

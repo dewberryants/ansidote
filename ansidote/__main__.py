@@ -1,6 +1,6 @@
 """
 ansi.e -  A simple ANSI art editor.
-Copyright (C) 2024 Dominik Behrens
+Copyright (C) 2025 Dominik Behrens
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,6 +15,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the Lesser GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from ansidote import run_ansicht
+from ansidote import run_ansidote
 
-run_ansicht()
+run_ansidote()
